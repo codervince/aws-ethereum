@@ -1,0 +1,113 @@
+# AWS Ethereum CloudFormation Stack
+# Kenneth Falck <kennu@luottamuksenloyly.fi> 2016
+
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  TeamId:
+    Description: "Team ID"
+    Default: "LL"
+    Type: "String"
+  NetworkId:
+    Description: "Network ID"
+    Default: "42424242"
+    Type: "String"
+  KeyName:
+    Description: "Key pair name"
+    Default: "ethereum"
+    Type: "String"
+  InstanceType:
+    Description: "Instance type"
+    Default: "t2.medium"
+    Type: "String"
+  ImageId:
+    Description: "Image AMI ID (default Ubuntu 16.04)"
+    Default: "ami-07174474"
+    Type: "String"
+  VolumeSize:
+    Description: "Instance volume size in GB"
+    Default: "20"
+    Type: "String"
+  AvailabilityZone:
+    Description: "Availability zone"
+    Default: "eu-west-1a"
+    Type: "String"
+
+Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Ethereum security group"
+      SecurityGroupIngress:
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: tcp
+          FromPort: 30303
+          ToPort: 30303
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: udp
+          FromPort: 30303
+          ToPort: 30303
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupName: !Ref SecurityGroup
+      SourceSecurityGroupName: !Ref SecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+  Volume1:
+    Type: AWS::EC2::Volume
+    Properties:
+      Size: !Ref VolumeSize
+      VolumeType: "gp2"
+      AvailabilityZone: !Ref AvailabilityZone
+  Node1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+      KeyName: !Ref KeyName
+      AvailabilityZone: !Ref AvailabilityZone
+      SecurityGroups:
+        - !Ref SecurityGroup
+      UserData:
+        "Fn::Base64":
+          "Fn::Join":
+            - "\n"
+            -
+              - "#!/bin/bash -xe"
+              - "export DEBIAN_FRONTEND=noninteractive"
+              - !Sub "export NETWORK_ID=${NetworkId}"
+              - !Sub "export TEAM_ID=${TeamId}"
+              - "apt-get install -y -q software-properties-common"
+              - "add-apt-repository -y ppa:ethereum/ethereum"
+              - "apt-get update -q"
+              - "apt-get install -y -q ethereum solc"
+              - "curl -s -o /home/ubuntu/genesis.json https://raw.githubusercontent.com/luottamus/aws-ethereum/master/genesis.json"
+              - "curl -s -o /home/ubuntu/ethereum.sh https://raw.githubusercontent.com/luottamus/aws-ethereum/master/ethereum.sh"
+              - "chown ubuntu:ubuntu /home/ubuntu/*"
+              - "chmod 755 /home/ubuntu/ethereum.sh"
+              - "echo NETWORK_ID=$NETWORK_ID >> /etc/environment"
+              - "echo TEAM_ID=$TEAM_ID >> /etc/environment"
+              - "exec sudo -u ubuntu -E /home/ubuntu/ethereum.sh"
+      Volumes:
+        - Device: "xvdh"
+          VolumeId: !Ref Volume1
+      Tags:
+        - Key: Name
+          Value: !Sub "Ethereum-${TeamId}-${NetworkId}-1"
+
+Outputs:
+  Node1InstanceId:
+    Description: "Node1 Instance Id"
+    Value: !Ref Node1
+  Node1PublicIp:
+    Description: "Node1 Public Ip"
+    Value: !GetAtt Node1.PublicIp
+  Node1PublicDnsName:
+    Description: "Node1 Public DNS Name"
+    Value: !GetAtt Node1.PublicDnsName
