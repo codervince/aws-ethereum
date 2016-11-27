@@ -3,6 +3,8 @@
 # Kenneth Falck <kennu@luottamuksenloyly.fi> 2016
 cd /home/ubuntu
 echo "----------------------------------------------------------------------" >> ethereum.log
+echo Detecting IP address >> ethereum.log
+curl -s -o /var/www/html/ip.json 'https://api.ipify.org?format=json'
 echo Initializing genesis block at `date` >> ethereum.log
 geth init genesis.json >>ethereum.log 2>&1
 echo Launching geth at `date` >> ethereum.log

@@ -35,20 +35,40 @@
     <script>
     $(function() {
       console.log('Initializing..')
+      var nodeinfo = {}
+      var ipinfo = {}
+      function update() {
+        var addr = window.location.hostname
+        $('#networkid').html(nodeinfo.protocols.eth.network)
+        $('#nodeid').html(nodeinfo.id)
+        $('#address').html(addr)
+        $('#ip').html(ipinfo.ip)
+        $('#version').html(nodeinfo.name)
+        $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
+        $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':30303 console')
+      }
       $.ajax({
         url: '/nodeinfo.json',
         dataType: 'json',
         success: function(result) {
-          var addr = window.location.hostname
-          $('#networkid').html(result.protocols.eth.network)
-          $('#nodeid').html(result.id)
-          $('#address').html(addr)
-          $('#version').html(result.name)
-          $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
-          $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + result.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + result.id + '@' + addr + ':30303 console')
+          $('#error').hide()
+          nodeinfo = result
+          update()
         },
         error: function (req, textStatus, err) {
-          $('#nodeinfo').html('Error: ' + textStatus + ' ' + err)
+          $('#error').show().html('Error: ' + textStatus + ' ' + err)
+        }
+      })
+      $.ajax({
+        url: '/ip.json',
+        dataType: 'json',
+        success: function(result) {
+          $('#error').hide()
+          ipinfo = result
+          update()
+        },
+        error: function (req, textStatus, err) {
+          $('#error').show().html('Error: ' + textStatus + ' ' + err)
         }
       })
     })
@@ -75,22 +95,8 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <h1>Node Info</h1>
-          <table class="table">
-            <thead>
-              <tr><th>Field</th><th>Value</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Network ID    </td><td><span id="networkid"></span></td></tr>
-              <tr><td>Node ID       </td><td><span id="nodeid"></span></td></tr>
-              <tr><td>Address       </td><td><span id="address"></span></td></tr>
-              <tr><td>Version       </td><td><span id="version"></span></td></tr>
-              <tr><td>Node info     </td><td><a href="/nodeinfo.json">nodeinfo.json</a></td></tr>
-              <tr><td>Genesis block </td><td><a href="/genesis.json">genesis.json</a></td></tr>
-            </tbody>
-          </table>
-          <!--<pre id="nodeinfo">
-          </pre>-->
+          <div id="error" class="alert alert-danger" style="display:none">
+          </div>
         </div>
       </div>
       <div class="row">
@@ -104,6 +110,26 @@
           </pre>
           <h3>Step 3: Launch Ethereum Wallet</h3>
           <p>Start Ethereum Wallet in your Applications.</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>Node Info</h1>
+          <table class="table">
+            <thead>
+              <tr><th>Field</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Network ID    </td><td><span id="networkid"></span></td></tr>
+              <tr><td>Node ID       </td><td><span id="nodeid"></span></td></tr>
+              <tr><td>IP Address    </td><td><span id="ip"></span></td></tr>
+              <tr><td>DNS Name      </td><td><span id="address"></span></td></tr>
+              <tr><td>Version       </td><td><span id="version"></span></td></tr>
+              <tr><td>Node info     </td><td><a href="/nodeinfo.json">nodeinfo.json</a></td></tr>
+              <tr><td>IP info       </td><td><a href="/ip.json">ip.json</a></td></tr>
+              <tr><td>Genesis block </td><td><a href="/genesis.json">genesis.json</a></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

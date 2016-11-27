@@ -98,7 +98,7 @@ Resources:
               - "curl -s -o /home/ubuntu/genesis.json https://raw.githubusercontent.com/luottamus/aws-ethereum/master/genesis.json"
               - "curl -s -o /home/ubuntu/ethereum.sh https://raw.githubusercontent.com/luottamus/aws-ethereum/master/ethereum.sh"
               - "curl -s -o /var/www/html/index.html https://raw.githubusercontent.com/luottamus/aws-ethereum/master/index.html"
-              - "touch /var/www/html/nodeinfo.json"
+              - "touch /var/www/html/nodeinfo.json /var/www/html/ip.json"
               - "cp /home/ubuntu/genesis.json /var/www/html/genesis.json"
               - "chown ubuntu:ubuntu /home/ubuntu/* /var/www/html /var/www/html/*"
               - "service nginx start"
