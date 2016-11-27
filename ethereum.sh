@@ -6,6 +6,6 @@ echo "----------------------------------------------------------------------" >>
 echo Initializing genesis block at `date` >> ethereum.log
 env >> ethereum.log
 geth init genesis.json >>ethereum.log 2>&1
-#echo Launching geth at `date` >> ethereum.log
-#geth --networkid "$NETWORK_ID" --nodiscover --support-dao-fork >>ethereum.log 2>&1 &
-#disown
+echo Launching geth at `date` >> ethereum.log
+geth --networkid "$NETWORK_ID" --nodiscover --support-dao-fork >>ethereum.log 2>&1 &
+disown
