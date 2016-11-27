@@ -8,4 +8,5 @@ geth init genesis.json >>ethereum.log 2>&1
 echo Launching geth at `date` >> ethereum.log
 geth --networkid "$NETWORK_ID" --nodiscover --support-dao-fork >>ethereum.log 2>&1 &
 disown
-geth --exec admin.nodeInfo attach > /var/www/html/nodeinfo.json
+sleep 5
+geth --exec 'console.log(JSON.stringify(admin.nodeInfo, null, 2))' attach | head -n -1 > /var/www/html/nodeinfo.json

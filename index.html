@@ -1,8 +1,111 @@
 <!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Ethereum Node Info</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>AWS Ethereum Node</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <style>
+      body {
+        font-family: 'Ubuntu', sans-serif;
+      }
+    </style>
+    <script>
+    $(function() {
+      console.log('Initializing..')
+      $.ajax({
+        url: '/nodeinfo.json',
+        dataType: 'json',
+        success: function(result) {
+          var addr = window.location.hostname
+          $('#networkid').html(result.protocols.eth.network)
+          $('#nodeid').html(result.id)
+          $('#address').html(addr)
+          $('#version').html(result.name)
+          $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
+          $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + result.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + result.id + '@' + addr + ':30303 console')
+        },
+        error: function (req, textStatus, err) {
+          $('#nodeinfo').html('Error: ' + textStatus + ' ' + err)
+        }
+      })
+    })
+    </script>
   </head>
   <body>
-    <h1>Ethereum Node Info</h1>
+    <!-- Static navbar -->
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">AWS Ethereum Node</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+        </div><!--/.nav-collapse -->
+      </div><!--/.container-fluid -->
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>Node Info</h1>
+          <table class="table">
+            <thead>
+              <tr><th>Field</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Network ID    </td><td><span id="networkid"></span></td></tr>
+              <tr><td>Node ID       </td><td><span id="nodeid"></span></td></tr>
+              <tr><td>Address       </td><td><span id="address"></span></td></tr>
+              <tr><td>Version       </td><td><span id="version"></span></td></tr>
+              <tr><td>Node info     </td><td><a href="/nodeinfo.json">nodeinfo.json</a></td></tr>
+              <tr><td>Genesis block </td><td><a href="/genesis.json">genesis.json</a></td></tr>
+            </tbody>
+          </table>
+          <!--<pre id="nodeinfo">
+          </pre>-->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>Connect to this node</h1>
+          <h3>Step 1: Initialize the genesis block</h3>
+          <pre id="genesis">
+          </pre>
+          <h3>Step 2: Run geth in Terminal</h3>
+          <pre id="geth">
+          </pre>
+          <h3>Step 3: Launch Ethereum Wallet</h3>
+          <p>Start Ethereum Wallet in your Applications.</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
