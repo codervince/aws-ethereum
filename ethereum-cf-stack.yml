@@ -45,6 +45,14 @@ Resources:
           ToPort: 22
         - CidrIp: "0.0.0.0/0"
           IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+        - CidrIp: "0.0.0.0/0"
+          IpProtocol: tcp
           FromPort: 30303
           ToPort: 30303
         - CidrIp: "0.0.0.0/0"
@@ -86,9 +94,10 @@ Resources:
               - "apt-get install -y -q software-properties-common"
               - "add-apt-repository -y ppa:ethereum/ethereum"
               - "apt-get update -q"
-              - "apt-get install -y -q ethereum solc"
+              - "apt-get install -y -q ethereum solc nginx"
               - "curl -s -o /home/ubuntu/genesis.json https://raw.githubusercontent.com/luottamus/aws-ethereum/master/genesis.json"
               - "curl -s -o /home/ubuntu/ethereum.sh https://raw.githubusercontent.com/luottamus/aws-ethereum/master/ethereum.sh"
+              - "service nginx start"
               - "chown ubuntu:ubuntu /home/ubuntu/*"
               - "chmod 755 /home/ubuntu/ethereum.sh"
               - "echo NETWORK_ID=$NETWORK_ID >> /etc/environment"
