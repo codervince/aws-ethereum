@@ -14,7 +14,7 @@ to ensure they are backed up before using the custom test network.
 
 The wallet data is stored in this folder:
 
-    /Users/xxx/Library/Ethereum/keystore
+    $HOME/Library/Ethereum/keystore
 
 - Install Ethereum Wallet on a new computer. Wait for the installation to
   complete and then close the application.
@@ -24,26 +24,23 @@ The wallet data is stored in this folder:
 
 ## Step 3: Customize geth
 
-By default geth will run with a command line similar to this:
-
-    "/Users/xxx/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork
-
-* The default data dir is /Users/xxx/Library/Ethereum
-* The default RPC port is 8545
-* The default WS-RPC port is 8546
-* The default listening port is 30303
-
 In order to connect to a custom blockchain, you need to run a new geth instance
-with the following parameters overriding the defaults. You can still keep
-running the default instance, too. Run this in a Terminal window:
+with new parameters overriding the defaults. You also need to initialize the
+custom blockchain with the correct genesis block.
 
-    "/Users/xxx/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork --datadir /Users/xxx/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid 42424242 --ipcpath /Users/xxx/Library/Ethereum/geth.ipc --bootnodes enode://NODEID@NODEADDR:30303 console
+To initialize the genesis block, run this in Terminal:
+
+    "$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json
+
+To start geth, run this in Terminal:
+
+    "$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid 42424242 --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://NODEID@NODEADDR:30303 console
 
 Note: You need to get the correct NODEID and NODEADDR and replace them in the command line.
 
 The new parameters specified for the custom blockchain network are:
 
-* New data dir is /Users/xxx/Library/Ethereum-LL
+* New data dir is $HOME/Library/Ethereum-LL
 * New RPC port is 8645
 * New WS-RPC port is 8646
 * New listening port is 30301
