@@ -10,7 +10,8 @@ geth init genesis.json >>ethereum.log 2>&1
 echo Launching geth at `date` >> ethereum.log
 mkdir -p /home/ubuntu/.ethereum/keystore
 curl -o /home/ubuntu/.ethereum/keystore/UTC--2016-12-28T17-28-02.207258170Z-48d8b7b8cd25ce99c6db70e1e373e6bfb51d1fbf https://raw.githubusercontent.com/luottamus/aws-ethereum/master/account.json
-geth --port 30301 --networkid "$NETWORK_ID" --unlock 48d8b7b8cd25ce99c6db70e1e373e6bfb51d1fbf >>ethereum.log 2>&1 &
+curl -o /home/ubuntu/account.passwd https://raw.githubusercontent.com/luottamus/aws-ethereum/master/account.passwd
+geth --port 30301 --networkid "$NETWORK_ID" --unlock 48d8b7b8cd25ce99c6db70e1e373e6bfb51d1fbf --password /home/ubuntu/account.passwd >>ethereum.log 2>&1 &
 disown
 sleep 5
 geth --exec 'console.log(JSON.stringify(admin.nodeInfo, null, 2))' attach | head -n -1 > /var/www/html/nodeinfo.json
