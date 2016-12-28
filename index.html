@@ -47,7 +47,7 @@
         $('#ip').html(ipinfo.ip)
         $('#version').html(nodeinfo.name)
         $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
-        $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':30303 console')
+        $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir "$HOME/Library/Ethereum-LL" --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':30303 console')
       }
 
       function refresh() {
@@ -179,8 +179,9 @@
         <div class="col-lg-12">
           <h1>Connect to this node</h1>
           <h3>Step 1: Close existing wallet and kill geth</h3>
-          <p>Close your existing Ethereum wallet. Then, to ensure the geth process is killed, run this in Terminal:</p>
-          <pre id="kill">killall geth</pre>
+          <p>Close your existing Ethereum wallet and back up your accounts. Then, to ensure the geth process is killed and any old data is cleared, run this in Terminal:</p>
+          <pre id="kill">killall geth
+rm -rf "$HOME/Library/Ethereum-LL"</pre>
           <h3>Step 2: Initialize the genesis block</h3>
           <pre id="genesis">
           </pre>

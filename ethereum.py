@@ -22,14 +22,18 @@ def geth_exec_expr(expr):
     return json.loads(re.sub(r'undefined\n$', '', output))
 
 def handle_transfer():
-    response['amount'] = form['amount'].value
-    response['address'] = form['address'].value
+    amount = form['amount'].value
+    address = form['address'].value
+    response['transfer'] = json.loads(geth_exec_expr("eth.sendTransaction({from:'48d8b7b8cd25ce99c6db70e1e373e6bfb51d1fbf', to:'%s', value:web3.toWei(%s, 'ether')})" % (address, amount)))
+
+def handle_balance():
+    response['balance'] = geth_exec_expr("eth.getBalance('48d8b7b8cd25ce99c6db70e1e373e6bfb51d1fbf')")
 
 def handle_peers():
     response['peers'] = geth_exec_expr('admin.peers')
 
 def handle_nodeinfo():
-    response['peers'] = geth_exec_expr('admin.nodeInfo')
+    response['nodeinfo'] = geth_exec_expr('admin.nodeInfo')
 
 def handle_unknown():
     global status_code, status_text
@@ -40,6 +44,8 @@ def handle_unknown():
 op = form['op'].value if 'op' in form else ''
 if op == 'transfer':
     handle_transfer()
+elif op == 'balance':
+    handle_balance()
 elif op == 'peers':
     handle_peers()
 elif op == 'nodeinfo':
