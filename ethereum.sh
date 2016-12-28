@@ -8,7 +8,7 @@ curl -s -o /var/www/html/ip.json 'https://api.ipify.org?format=json'
 echo Initializing genesis block at `date` >> ethereum.log
 geth init genesis.json >>ethereum.log 2>&1
 echo Launching geth at `date` >> ethereum.log
-geth --networkid "$NETWORK_ID" --support-dao-fork >>ethereum.log 2>&1 &
+geth --networkid "$NETWORK_ID" >>ethereum.log 2>&1 &
 disown
 sleep 5
 geth --exec 'console.log(JSON.stringify(admin.nodeInfo, null, 2))' attach | head -n -1 > /var/www/html/nodeinfo.json

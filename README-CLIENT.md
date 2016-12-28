@@ -34,7 +34,7 @@ To initialize the genesis block, run this in Terminal:
 
 To start geth, run this in Terminal:
 
-    "$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --support-dao-fork --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid 42424242 --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://NODEID@NODEADDR:30303 console
+    "$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid 42424242 --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://NODEID@NODEADDR:30303 console
 
 Note: You need to get the correct NODEID and NODEADDR and replace them in the command line.
 
