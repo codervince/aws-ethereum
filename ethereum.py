@@ -22,13 +22,14 @@ def geth_exec_expr(expr):
     return json.loads(re.sub(r'undefined\n$', '', output))
 
 def handle_transfer():
-    response['op'] = 'transfer'
     response['amount'] = form['amount'].value
     response['address'] = form['address'].value
 
 def handle_peers():
-    response['op'] = 'peers'
     response['peers'] = geth_exec_expr('admin.peers')
+
+def handle_nodeinfo():
+    response['peers'] = geth_exec_expr('admin.nodeInfo')
 
 def handle_unknown():
     global status_code, status_text
@@ -41,6 +42,8 @@ if op == 'transfer':
     handle_transfer()
 elif op == 'peers':
     handle_peers()
+elif op == 'nodeinfo':
+    handle_nodeinfo()
 else:
     handle_unknown()
 
