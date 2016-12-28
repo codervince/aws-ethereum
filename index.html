@@ -165,7 +165,7 @@
           success: function(result) {
             $('#transfer-error').hide()
             $('#transfer-info').hide()
-            $('#transfer-success').show().html('Transfer completed successfully.')
+            $('#transfer-success').show().html('Transfer completed successfully: ' + result.output)
           },
           error: function (req, textStatus, err) {
             var error = req.responseJSON && req.responseJSON.error || err || textStatus
