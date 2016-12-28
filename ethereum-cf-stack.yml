@@ -32,6 +32,14 @@ Parameters:
     Description: "Availability zone"
     Default: "eu-west-1a"
     Type: "String"
+  Domain:
+    Description: "Domain name for DNS names"
+    Default: "ethereum.luottamuksenloyly.fi"
+    Type: "String"
+  HostedZoneId:
+    Description: "Hosted zone ID for DNS names"
+    Default: "Z8EV425DFSGVV"
+    Type: "String"
 
 Resources:
   SecurityGroup:
@@ -115,6 +123,21 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "Ethereum-${TeamId}-${NetworkId}-1"
+  Node1RecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Name:
+        "Fn::Join":
+          - ""
+          -
+            - !Ref Node1
+            - "."
+            - !Ref Domain
+      HostedZoneName: !Ref Domain
+      Type: "CNAME"
+      TTL: "300"
+      ResourceRecords:
+        - !GetAtt Node1.PublicDnsName
 
 Outputs:
   Node1InstanceId:
@@ -125,4 +148,4 @@ Outputs:
     Value: !GetAtt Node1.PublicIp
   Node1PublicDnsName:
     Description: "Node1 Public DNS Name"
-    Value: !GetAtt Node1.PublicDnsName
+    Value: !Ref Node1RecordSet

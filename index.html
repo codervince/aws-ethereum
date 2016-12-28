@@ -49,7 +49,8 @@
         $('#ip').html(ipinfo.ip)
         $('#version').html(nodeinfo.name)
         $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
-        $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir "$HOME/Library/Ethereum-LL" --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':' + port + ' --mine --minerthreads=1 console')
+        $('#gethaccount').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir "$HOME/Library/Ethereum-LL" account new')
+        $('#gethmine').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir "$HOME/Library/Ethereum-LL" --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --fast --cache 512 --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':' + port + ' --mine --minerthreads=1 console')
       }
 
       function refresh() {
@@ -225,17 +226,20 @@ rm -rf "$HOME/Library/Ethereum-LL"</pre>
           <h3>Step 2: Initialize the genesis block</h3>
           <pre id="genesis">
           </pre>
-          <h3>Step 3: Run geth in Terminal</h3>
-          <pre id="geth">
+          <h3>Step 3: Create an account</h3>
+          <pre id="gethaccount">
           </pre>
-          <h3>Step 4: Launch Ethereum Wallet</h3>
-          <p>Start Ethereum Wallet in your Applications.</p>
+          <h3>Step 4: Connect to the network and start mining</h3>
+          <pre id="gethmine">
+          </pre>
+          <h3>Step 5: Launch Ethereum Wallet</h3>
+          <p>Start Ethereum Wallet in your Applications folder.</p>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-12">
           <h3>Step 5: Transfer Ether to your wallet</h3>
-          <p>Copy-paste your address from your wallet to the field below and hit Transfer.</p>
+          <p>Copy-paste your account address from your wallet to the field below and hit Transfer.</p>
           <form id="transfer" class="form-inline">
             <div class="form-group">
               <label class="sr-only" for="amount">Amount (in ETH)</label>
