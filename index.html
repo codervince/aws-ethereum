@@ -41,13 +41,15 @@
 
       function update() {
         var addr = window.location.hostname
+        var port = '' + (nodeinfo.ports && nodeinfo.ports.listener || 0)
         $('#networkid').html(nodeinfo.protocols.eth.network)
         $('#nodeid').html(nodeinfo.id)
-        $('#address').html(addr)
+        $('#dnsname').html(addr)
+        $('#port').html(port)
         $('#ip').html(ipinfo.ip)
         $('#version').html(nodeinfo.name)
         $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
-        $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir "$HOME/Library/Ethereum-LL" --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':30303 console')
+        $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir "$HOME/Library/Ethereum-LL" --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':' + port + ' console')
       }
 
       function refresh() {
@@ -286,7 +288,8 @@ rm -rf "$HOME/Library/Ethereum-LL"</pre>
               <tr><td>Network ID    </td><td><span id="networkid"></span></td></tr>
               <tr><td>Node ID       </td><td><span id="nodeid"></span></td></tr>
               <tr><td>IP Address    </td><td><span id="ip"></span></td></tr>
-              <tr><td>DNS Name      </td><td><span id="address"></span></td></tr>
+              <tr><td>DNS Name      </td><td><span id="dnsname"></span></td></tr>
+              <tr><td>Port          </td><td><span id="port"></span></td></tr>
               <tr><td>Version       </td><td><span id="version"></span></td></tr>
               <tr><td>Node info     </td><td><a href="/nodeinfo.json">nodeinfo.json</a></td></tr>
               <tr><td>IP info       </td><td><a href="/ip.json">ip.json</a></td></tr>
