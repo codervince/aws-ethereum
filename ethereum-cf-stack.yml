@@ -6,7 +6,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   TeamId:
     Description: "Team ID"
-    Default: "LL"
+    Default: "master"
     Type: "String"
   NetworkId:
     Description: "Network ID"
@@ -34,11 +34,7 @@ Parameters:
     Type: "String"
   Domain:
     Description: "Domain name for DNS names"
-    Default: "ethereum.luottamuksenloyly.fi"
-    Type: "String"
-  HostedZoneId:
-    Description: "Hosted zone ID for DNS names"
-    Default: "Z8EV425DFSGVV"
+    Default: "ethereum.luottamuksenloyly.fi."
     Type: "String"
 
 Resources:
@@ -122,7 +118,7 @@ Resources:
           VolumeId: !Ref Volume1
       Tags:
         - Key: Name
-          Value: !Sub "Ethereum-${TeamId}-${NetworkId}-1"
+          Value: !Sub "Ethereum-${TeamId}-1"
   Node1RecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
@@ -130,7 +126,7 @@ Resources:
         "Fn::Join":
           - ""
           -
-            - !Ref Node1
+            - !Ref TeamId
             - "."
             - !Ref Domain
       HostedZoneName: !Ref Domain
