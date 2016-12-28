@@ -104,6 +104,7 @@ Resources:
               - "cp /home/ubuntu/genesis.json /var/www/html/genesis.json"
               - "chown ubuntu:ubuntu /home/ubuntu/* /var/www/html /var/www/html/* /usr/lib/cgi-bin/*"
               - "a2enmod cgid"
+              - "echo 'export APACHE_RUN_USER=ubuntu' >> /etc/apache2/envvars"
               - "service apache2 restart"
               - "echo NETWORK_ID=$NETWORK_ID >> /etc/environment"
               - "echo TEAM_ID=$TEAM_ID >> /etc/environment"
