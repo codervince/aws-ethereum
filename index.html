@@ -100,6 +100,40 @@
         })
       }
 
+      function refreshLogs() {
+        $.ajax({
+          method: 'POST',
+          url: '/cgi-bin/ethereum.py',
+          data: {
+            op: 'logs'
+          },
+          dataType: 'json',
+          success: function(result) {
+            $('#logs').html(result.output)
+          },
+          error: function (req, textStatus, err) {
+            console.log('Error loading peers:', err)
+          }
+        })
+      }
+
+      function refreshBalance() {
+        $.ajax({
+          method: 'POST',
+          url: '/cgi-bin/ethereum.py',
+          data: {
+            op: 'balance'
+          },
+          dataType: 'json',
+          success: function(result) {
+            $('#balance').html(result.balance)
+          },
+          error: function (req, textStatus, err) {
+            console.log('Error loading peers:', err)
+          }
+        })
+      }
+
       function transfer(event) {
         event.preventDefault()
         $('#transfer-error').hide()
@@ -144,9 +178,13 @@
       $('#transfer').bind('submit', transfer)
 
       setInterval(refreshPeers, 10000)
+      setInterval(refreshLogs, 10000)
+      setInterval(refreshBalance, 10000)
 
       refresh()
       refreshPeers()
+      refreshLogs()
+      refreshBalance()
     })
     </script>
   </head>
@@ -213,6 +251,8 @@ rm -rf "$HOME/Library/Ethereum-LL"</pre>
             <button type="submit" class="btn btn-primary">Transfer</button>
           </form>
           <br/>
+          <div>Balance left: ETH <span id="balance"></span></div>
+          <br/>
           <div id="transfer-error" class="alert alert-danger" style="display:none">
           </div>
           <div id="transfer-info" class="alert alert-info" style="display:none">
@@ -253,6 +293,13 @@ rm -rf "$HOME/Library/Ethereum-LL"</pre>
               <tr><td>Genesis block </td><td><a href="/genesis.json">genesis.json</a></td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <br/>
+          <h1>Logs</h1>
+          <pre id="logs"></pre>
         </div>
       </div>
     </div>

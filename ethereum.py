@@ -29,13 +29,17 @@ def handle_transfer():
     response['output'] = geth_exec_expr(expr)
 
 def handle_balance():
-    response['balance'] = float(geth_exec_expr("eth.getBalance('e986f163e65361be0f08aa48dcc3a7b12a57baf0')"))
+    response['balance'] = float(geth_exec_expr("eth.getBalance('e986f163e65361be0f08aa48dcc3a7b12a57baf0')")) / 1000000000000000000
 
 def handle_peers():
     response['peers'] = geth_exec_expr('admin.peers')
 
 def handle_nodeinfo():
     response['nodeinfo'] = geth_exec_expr('admin.nodeInfo')
+
+def handle_logs():
+    output = subprocess.check_output(['/usr/bin/tail', '-n', '20', '/home/ubuntu/ethereum.log'])
+    response['output'] = output
 
 def handle_unknown():
     global status_code, status_text
@@ -52,6 +56,8 @@ elif op == 'peers':
     handle_peers()
 elif op == 'nodeinfo':
     handle_nodeinfo()
+elif op == 'logs':
+    handle_logs()
 else:
     handle_unknown()
 
