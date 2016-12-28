@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>AWS Ethereum Node</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -76,6 +77,29 @@
         })
       }
 
+      function refreshPeers() {
+        $.ajax({
+          method: 'POST',
+          url: '/cgi-bin/ethereum.py',
+          data: {
+            op: 'peers'
+          },
+          dataType: 'json',
+          success: function(result) {
+            console.log('Peers:', result)
+            var html = ''
+            result.peers.map(peer => {
+              html += '<tr><td width="20%">' + peer.network.remoteAddress + '</td><td width="50%">' + peer.name + '</td><td width="30%"><div style="max-width:250px;overflow:auto">' + peer.id + '</div></td></tr>'
+            })
+            if (!html) html = '<tr><td>(no peers connected)</td></tr>'
+            $('#peers').html(html)
+          },
+          error: function (req, textStatus, err) {
+            console.log('Error loading peers:', err)
+          }
+        })
+      }
+
       function transfer(event) {
         event.preventDefault()
         $('#transfer-error').hide()
@@ -119,7 +143,10 @@
 
       $('#transfer').bind('submit', transfer)
 
+      setInterval(refreshPeers, 10000)
+
       refresh()
+      refreshPeers()
     })
     </script>
   </head>
@@ -196,7 +223,20 @@
       <div class="row">
         <div class="col-lg-12">
           <br/>
-          <h1>Node Info</h1>
+          <h1>Connected peers</h1>
+          <table class="table">
+            <thead>
+              <tr><th>Address</th><th>Name</th><th>Node ID</th></tr>
+            </thead>
+            <tbody id="peers">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <br/>
+          <h1>Node info</h1>
           <table class="table">
             <thead>
               <tr><th>Field</th><th>Value</th></tr>
@@ -210,19 +250,6 @@
               <tr><td>Node info     </td><td><a href="/nodeinfo.json">nodeinfo.json</a></td></tr>
               <tr><td>IP info       </td><td><a href="/ip.json">ip.json</a></td></tr>
               <tr><td>Genesis block </td><td><a href="/genesis.json">genesis.json</a></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-12">
-          <br/>
-          <h1>Connected Peers</h1>
-          <table class="table">
-            <thead>
-              <tr><th>Peer</th></tr>
-            </thead>
-            <tbody id="peers">
             </tbody>
           </table>
         </div>

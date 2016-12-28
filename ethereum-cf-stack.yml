@@ -53,12 +53,12 @@ Resources:
           ToPort: 443
         - CidrIp: "0.0.0.0/0"
           IpProtocol: tcp
-          FromPort: 30303
-          ToPort: 30303
+          FromPort: 30300
+          ToPort: 30399
         - CidrIp: "0.0.0.0/0"
           IpProtocol: udp
-          FromPort: 30303
-          ToPort: 30303
+          FromPort: 30300
+          ToPort: 30399
   SecurityGroupIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
