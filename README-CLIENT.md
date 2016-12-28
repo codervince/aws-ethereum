@@ -22,17 +22,27 @@ The wallet data is stored in this folder:
   new computer.
 - Start Ethereum Wallet on the new computer and check that the wallet works.
 
-## Step 3: Customize geth
+## Step 3: Close wallet and kill existing geth
 
-In order to connect to a custom blockchain, you need to run a new geth instance
-with new parameters overriding the defaults. You also need to initialize the
-custom blockchain with the correct genesis block.
+You need to make sure that the old Ethereum wallet is no longer running.
+Close the GUI application and then run this in Terminal to kill all geth
+processes:
 
-To initialize the genesis block, run this in Terminal:
+    killall geth
+
+Verify that no geth processes are running:
+
+    ps ax | grep [g]eth
+
+## Step 4: Initialize the custom genesis block
+
+To initialize the custom genesis block (found in genesis.json), run this in Terminal:
 
     "$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json
 
-To start geth, run this in Terminal:
+## Step 5: Customize geth
+
+To start a customized geth, run this in Terminal:
 
     "$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid 42424242 --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://NODEID@NODEADDR:30303 console
 

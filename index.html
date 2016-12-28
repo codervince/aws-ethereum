@@ -37,6 +37,7 @@
       console.log('Initializing..')
       var nodeinfo = {}
       var ipinfo = {}
+
       function update() {
         var addr = window.location.hostname
         $('#networkid').html(nodeinfo.protocols.eth.network)
@@ -47,30 +48,78 @@
         $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
         $('#geth').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --fast --cache 512 --datadir $HOME/Library/Ethereum-LL --port 30301 --rpcport 8645 --wsport 8646 --networkid ' + nodeinfo.protocols.eth.network + ' --ipcpath $HOME/Library/Ethereum/geth.ipc --bootnodes enode://' + nodeinfo.id + '@' + ipinfo.ip + ':30303 console')
       }
-      $.ajax({
-        url: '/nodeinfo.json',
-        dataType: 'json',
-        success: function(result) {
-          $('#error').hide()
-          nodeinfo = result
-          update()
-        },
-        error: function (req, textStatus, err) {
-          $('#error').show().html('Error: ' + textStatus + ' ' + err)
+
+      function refresh() {
+        $.ajax({
+          url: '/nodeinfo.json',
+          dataType: 'json',
+          success: function(result) {
+            $('#error').hide()
+            nodeinfo = result
+            update()
+          },
+          error: function (req, textStatus, err) {
+            $('#error').show().html('Error: ' + textStatus + ' ' + err)
+          }
+        })
+        $.ajax({
+          url: '/ip.json',
+          dataType: 'json',
+          success: function(result) {
+            $('#error').hide()
+            ipinfo = result
+            update()
+          },
+          error: function (req, textStatus, err) {
+            $('#error').show().html('Error: ' + textStatus + ' ' + err)
+          }
+        })
+      }
+
+      function transfer(event) {
+        event.preventDefault()
+        $('#transfer-error').hide()
+        $('#transfer-info').hide()
+        $('#transfer-success').hide()
+        var amount = $('#amount').val()
+        var address = $('#address').val()
+        if (!amount) {
+          $('#transfer-error').show().html('Please enter ETH amount')
+          return false
         }
-      })
-      $.ajax({
-        url: '/ip.json',
-        dataType: 'json',
-        success: function(result) {
-          $('#error').hide()
-          ipinfo = result
-          update()
-        },
-        error: function (req, textStatus, err) {
-          $('#error').show().html('Error: ' + textStatus + ' ' + err)
+        if (!address) {
+          $('#transfer-error').show().html('Please enter recipient address')
+          return false
         }
-      })
+        console.log('Transferring ETH', amount, 'to', address)
+        $('#transfer-info').show().html('Initiating transfer...')
+        $.ajax({
+          method: 'POST',
+          url: '/cgi-bin/ethereum.py',
+          data: {
+            op: 'transfer',
+            amount: amount,
+            address: address
+          },
+          dataType: 'json',
+          success: function(result) {
+            $('#transfer-error').hide()
+            $('#transfer-info').hide()
+            $('#transfer-success').show().html('Transfer completed successfully.')
+          },
+          error: function (req, textStatus, err) {
+            var error = req.responseJSON && req.responseJSON.error || err || textStatus
+            $('#transfer-info').hide()
+            $('#transfer-error').show().html('Transfer error: ' + error)
+            $('#transfer-success').hide()
+          }
+        })
+        return false
+      }
+
+      $('#transfer').bind('submit', transfer)
+
+      refresh()
     })
     </script>
   </head>
@@ -102,18 +151,51 @@
       <div class="row">
         <div class="col-lg-12">
           <h1>Connect to this node</h1>
-          <h3>Step 1: Initialize the genesis block</h3>
+          <h3>Step 1: Close existing wallet and kill geth</h3>
+          <p>Close your existing Ethereum wallet. Then, to ensure the geth process is killed, run this in Terminal:</p>
+          <pre id="kill">killall geth</pre>
+          <h3>Step 2: Initialize the genesis block</h3>
           <pre id="genesis">
           </pre>
-          <h3>Step 2: Run geth in Terminal</h3>
+          <h3>Step 3: Run geth in Terminal</h3>
           <pre id="geth">
           </pre>
-          <h3>Step 3: Launch Ethereum Wallet</h3>
+          <h3>Step 4: Launch Ethereum Wallet</h3>
           <p>Start Ethereum Wallet in your Applications.</p>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-12">
+          <h3>Step 5: Transfer Ether to your wallet</h3>
+          <p>Copy-paste your address from your wallet to the field below and hit Transfer.</p>
+          <form id="transfer" class="form-inline">
+            <div class="form-group">
+              <label class="sr-only" for="amount">Amount (in ETH)</label>
+              <div class="input-group">
+                <div class="input-group-addon">ETH</div>
+                <input type="text" class="form-control" id="amount" placeholder="Amount" value="1000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="amount">To account</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="address" placeholder="Address">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Transfer</button>
+          </form>
+          <br/>
+          <div id="transfer-error" class="alert alert-danger" style="display:none">
+          </div>
+          <div id="transfer-info" class="alert alert-info" style="display:none">
+          </div>
+          <div id="transfer-success" class="alert alert-success" style="display:none">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <br/>
           <h1>Node Info</h1>
           <table class="table">
             <thead>

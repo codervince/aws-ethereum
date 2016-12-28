@@ -102,7 +102,7 @@ Resources:
               - "chmod 755 /home/ubuntu/ethereum.sh /usr/lib/cgi-bin/ethereum.py"
               - "touch /var/www/html/nodeinfo.json /var/www/html/ip.json"
               - "cp /home/ubuntu/genesis.json /var/www/html/genesis.json"
-              - "chown ubuntu:ubuntu /home/ubuntu/* /var/www/html /var/www/html/*"
+              - "chown ubuntu:ubuntu /home/ubuntu/* /var/www/html /var/www/html/* /usr/lib/cgi-bin/*"
               - "a2enmod cgid"
               - "service apache2 restart"
               - "echo NETWORK_ID=$NETWORK_ID >> /etc/environment"
