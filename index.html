@@ -42,11 +42,11 @@
       function update() {
         var addr = window.location.hostname
         var port = '' + (nodeinfo.ports && nodeinfo.ports.listener || 0)
-        $('#networkid').html(nodeinfo.protocols.eth.network)
+        $('#networkid').html(nodeinfo.protocols && nodeinfo.protocols.eth && nodeinfo.protocols.eth.network)
         $('#nodeid').html(nodeinfo.id)
         $('#dnsname').html(addr)
         $('#port').html(port)
-        $('#ip').html(ipinfo.ip)
+        $('#ip').html(nodeinfo.ip)
         $('#version').html(nodeinfo.name)
         $('#genesis').html('curl -o genesis.json http://' + addr + '/genesis.json\n"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir $HOME/Library/Ethereum-LL init genesis.json')
         $('#gethaccount').html('"$HOME/Library/Application Support/Ethereum Wallet/binaries/Geth/unpacked/geth" --datadir "$HOME/Library/Ethereum-LL" account new')
@@ -116,7 +116,24 @@
             $('#logs').html(result.output)
           },
           error: function (req, textStatus, err) {
-            console.log('Error loading peers:', err)
+            console.log('Error loading logs:', err)
+          }
+        })
+      }
+
+      function refreshAccounts() {
+        $.ajax({
+          method: 'POST',
+          url: '/cgi-bin/ethereum.py',
+          data: {
+            op: 'accounts'
+          },
+          dataType: 'json',
+          success: function(result) {
+            $('#account').html(result.accounts && result.accounts[0])
+          },
+          error: function (req, textStatus, err) {
+            console.log('Error loading accounts:', err)
           }
         })
       }
@@ -133,7 +150,7 @@
             $('#balance').html(result.balance)
           },
           error: function (req, textStatus, err) {
-            console.log('Error loading peers:', err)
+            console.log('Error loading balance:', err)
           }
         })
       }
@@ -183,11 +200,13 @@
 
       setInterval(refreshPeers, 10000)
       setInterval(refreshLogs, 10000)
+      setInterval(refreshAccounts, 10000)
       setInterval(refreshBalance, 10000)
 
       refresh()
       refreshPeers()
       refreshLogs()
+      refreshAccounts()
       refreshBalance()
     })
     </script>
@@ -258,7 +277,7 @@ rm -rf "$HOME/Library/Ethereum-LL"</pre>
             <button type="submit" class="btn btn-primary">Transfer</button>
           </form>
           <br/>
-          <div>Balance left: ETH <span id="balance"></span></div>
+          <div>Balance left: ETH <span id="balance"></span> in account <span id="account"></span></div>
           <br/>
           <div id="transfer-error" class="alert alert-danger" style="display:none">
           </div>
