@@ -1,3 +1,4 @@
+personal.unlockAccount(eth.accounts[0], 'pallo')
 loadScript('mortal.abi')
 loadScript('mortal.bin')
 loadScript('greeter.abi')
