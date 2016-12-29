@@ -21,7 +21,7 @@ else
   # Create a random account for this node
   geth --password /home/ubuntu/account.passwd account new
   BOOTNODES=`curl -s -d 'op=bootnode' http://master.ethereum.luottamuksenloyly.fi/cgi-bin/ethereum.py`
-  UNLOCK=""
+  UNLOCK="--unlock 0"
 fi
 geth --port 30301 --networkid "$NETWORK_ID" $NATOPTION $BOOTNODES $UNLOCK --password /home/ubuntu/account.passwd --mine --minerthreads=1 >>ethereum.log 2>&1 &
 disown
