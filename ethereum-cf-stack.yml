@@ -48,7 +48,7 @@ Conditions:
       - master
   IsNotMaster:
     "Fn::Not":
-      "Fn::Equals":
+      - "Fn::Equals":
         - !Ref TeamId
         - master
 
