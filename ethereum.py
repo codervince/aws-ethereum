@@ -24,12 +24,12 @@ def geth_exec_expr(expr):
 def handle_transfer():
     amount = form['amount'].value
     address = form['address'].value
-    expr = "eth.sendTransaction({from:'e986f163e65361be0f08aa48dcc3a7b12a57baf0', to:'%s', value:web3.toWei(%s, 'ether')})" % (address, amount)
+    expr = "eth.sendTransaction({from:eth.accounts[0], to:'%s', value:web3.toWei(%s, 'ether')})" % (address, amount)
     #response['expr'] = expr
     response['output'] = geth_exec_expr(expr)
 
 def handle_balance():
-    response['balance'] = float(geth_exec_expr("eth.getBalance('e986f163e65361be0f08aa48dcc3a7b12a57baf0')")) / 1000000000000000000
+    response['balance'] = float(geth_exec_expr("eth.getBalance(eth.accounts[0])")) / 1000000000000000000
 
 def handle_peers():
     response['peers'] = geth_exec_expr('admin.peers')
