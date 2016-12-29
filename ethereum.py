@@ -39,7 +39,7 @@ def handle_nodeinfo():
 
 def handle_bootnode():
     nodeinfo = geth_exec_expr('admin.nodeInfo')
-    with open '/var/www/html/ip.json' as f:
+    with open('/var/www/html/ip.json') as f:
         d = json.loads(f)
         ip = d['ip']
     response = '--bootnodes enode://%s@%s:%s' % (nodeinfo['id'], ip, nodeinfo['ports']['listener'])
