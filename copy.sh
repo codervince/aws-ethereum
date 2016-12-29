@@ -14,3 +14,4 @@ else
 fi
 scp -i ethereum.pem -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no index.html ubuntu@$ADDR:/var/www/html/index.html
 scp -i ethereum.pem -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ethereum.py ubuntu@$ADDR:/usr/lib/cgi-bin/ethereum.py
+scp -i ethereum.pem -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ethereum.sh ubuntu@$ADDR:ethereum.sh
