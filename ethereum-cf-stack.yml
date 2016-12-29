@@ -34,7 +34,7 @@ Parameters:
     Type: "String"
   Domain:
     Description: "Domain name for DNS names"
-    Default: "ethereum.luottamuksenloyly.fi."
+    Default: "ethereum.luottamuksenloyly.fi"
     Type: "String"
   MasterAccountId:
     Description: "Master Account ID"
@@ -46,6 +46,11 @@ Conditions:
     "Fn::Equals":
       - !Ref TeamId
       - master
+  IsNotMaster:
+    "Fn::Not":
+      "Fn::Equals":
+        - !Ref TeamId
+        - master
 
 Resources:
   SecurityGroup:
@@ -106,6 +111,7 @@ Resources:
               - !Sub "export NETWORK_ID=${NetworkId}"
               - !Sub "export TEAM_ID=${TeamId}"
               - !Sub "export MASTER_ACCOUNT_ID=${MasterAccountId}"
+              - !Sub "export DOMAIN=${Domain}"
               - "apt-get install -y -q software-properties-common"
               - "add-apt-repository -y ppa:ethereum/ethereum"
               - "apt-get update -q"
@@ -124,6 +130,7 @@ Resources:
               - "echo NETWORK_ID=$NETWORK_ID >> /etc/environment"
               - "echo TEAM_ID=$TEAM_ID >> /etc/environment"
               - "echo MASTER_ACCOUNT_ID=$MASTER_ACCOUNT_ID >> /etc/environment"
+              - "echo DOMAIN=$DOMAIN >> /etc/environment"
               - "exec sudo -u ubuntu -E /home/ubuntu/ethereum.sh"
       Volumes:
         - Device: "xvdh"
@@ -133,6 +140,8 @@ Resources:
           Value: !Sub "Ethereum-${TeamId}-1"
   Node1RecordSet:
     Type: "AWS::Route53::RecordSet"
+    Condition:
+      IsNotMaster
     Properties:
       Name:
         "Fn::Join":
@@ -141,7 +150,13 @@ Resources:
             - !Ref TeamId
             - "."
             - !Ref Domain
-      HostedZoneName: !Ref Domain
+            - "."
+      HostedZoneName:
+        "Fn::Join":
+          - ""
+          -
+            - !Ref Domain
+            - "."
       Type: "CNAME"
       TTL: "300"
       ResourceRecords:
@@ -161,5 +176,6 @@ Outputs:
     Description: "Node1 Public Ip"
     Value: !GetAtt Node1.PublicIp
   Node1PublicDnsName:
+    Condition: IsNotMaster
     Description: "Node1 Public DNS Name"
     Value: !Ref Node1RecordSet
