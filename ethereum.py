@@ -28,6 +28,9 @@ def handle_transfer():
     #response['expr'] = expr
     response['output'] = geth_exec_expr(expr)
 
+def handle_accounts():
+    response['accounts'] = geth_exec_expr("eth.accounts")
+
 def handle_balance():
     response['balance'] = float(geth_exec_expr("eth.getBalance(eth.accounts[0])")) / 1000000000000000000
 
@@ -58,6 +61,8 @@ def handle_unknown():
 op = form['op'].value if 'op' in form else ''
 if op == 'transfer':
     handle_transfer()
+elif op == 'accounts':
+    handle_accounts()
 elif op == 'balance':
     handle_balance()
 elif op == 'peers':
