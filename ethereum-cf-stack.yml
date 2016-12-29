@@ -36,6 +36,16 @@ Parameters:
     Description: "Domain name for DNS names"
     Default: "ethereum.luottamuksenloyly.fi."
     Type: "String"
+  MasterAccountId:
+    Description: "Master Account ID"
+    Default: "e986f163e65361be0f08aa48dcc3a7b12a57baf0"
+    Type: "String"
+
+Conditions:
+  IsMaster:
+    "Fn::Equals":
+      - !Ref TeamId
+      - master
 
 Resources:
   SecurityGroup:
@@ -95,6 +105,7 @@ Resources:
               - "export DEBIAN_FRONTEND=noninteractive"
               - !Sub "export NETWORK_ID=${NetworkId}"
               - !Sub "export TEAM_ID=${TeamId}"
+              - !Sub "export MASTER_ACCOUNT_ID=${MasterAccountId}"
               - "apt-get install -y -q software-properties-common"
               - "add-apt-repository -y ppa:ethereum/ethereum"
               - "apt-get update -q"
@@ -112,6 +123,7 @@ Resources:
               - "service apache2 restart"
               - "echo NETWORK_ID=$NETWORK_ID >> /etc/environment"
               - "echo TEAM_ID=$TEAM_ID >> /etc/environment"
+              - "echo MASTER_ACCOUNT_ID=$MASTER_ACCOUNT_ID >> /etc/environment"
               - "exec sudo -u ubuntu -E /home/ubuntu/ethereum.sh"
       Volumes:
         - Device: "xvdh"
@@ -134,6 +146,12 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - !GetAtt Node1.PublicDnsName
+  MasterIPAddress:
+    Type: "AWS::EC2::EIPAssociation"
+    Condition: IsMaster
+    Properties:
+      InstanceId: !Ref Node1
+      AllocationId: eipalloc-ee112d8a
 
 Outputs:
   Node1InstanceId:

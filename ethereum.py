@@ -37,6 +37,13 @@ def handle_peers():
 def handle_nodeinfo():
     response['nodeinfo'] = geth_exec_expr('admin.nodeInfo')
 
+def handle_bootnode():
+    nodeinfo = geth_exec_expr('admin.nodeInfo')
+    with open '/var/www/html/ip.json' as f:
+        d = json.loads(f)
+        ip = d['ip']
+    response = '--bootnodes enode://%s@%s:%s' % (nodeinfo['id'], ip, nodeinfo['ports']['listener'])
+
 def handle_logs():
     output = subprocess.check_output(['/usr/bin/tail', '-n', '20', '/home/ubuntu/ethereum.log'])
     response['output'] = output
@@ -56,6 +63,8 @@ elif op == 'peers':
     handle_peers()
 elif op == 'nodeinfo':
     handle_nodeinfo()
+elif op == 'bootnode':
+    handle_bootnode()
 elif op == 'logs':
     handle_logs()
 else:
@@ -64,4 +73,4 @@ else:
 print('Status: %s %s' % (status_code, status_text))
 print('Content-Type: application/json')
 print('')
-print(json.dumps(response))
+print(response if isinstance(response, basestring) else json.dumps(response))
