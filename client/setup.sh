@@ -26,7 +26,7 @@ while [ ! -f ll-ethereum.pem -o ! -f ll-credentials.csv ]; do
   fi
 done
 
-chmod 600 ethereum.pem
+chmod 600 ll-ethereum.pem
 
 AWSKEY=''
 AWSSECRET=''
