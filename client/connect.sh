@@ -11,7 +11,7 @@ if [ "$TEAM_ID" = "" ]; then
   exit
 fi
 if [ "$TEAM_ID" = "master" ]; then
-  ADDR='master.ethereum.luottamuksenloyly.fi'
+  ADDR='master.blockchain-bootcamp.com'
 else
   ADDR=`aws cloudformation describe-stacks --stack-name Ethereum-$TEAM_ID --query "Stacks[0].Outputs[?OutputKey=='Node1PublicDnsName'].OutputValue" --output text`
 fi

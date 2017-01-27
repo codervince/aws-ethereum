@@ -34,7 +34,7 @@ Parameters:
     Type: "String"
   Domain:
     Description: "Domain name for DNS names"
-    Default: "ethereum.luottamuksenloyly.fi"
+    Default: "blockchain-bootcamp.com"
     Type: "String"
   MasterAccountId:
     Description: "Master Account ID"

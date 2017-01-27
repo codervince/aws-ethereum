@@ -1,11 +1,12 @@
 #!/bin/sh
 # Setup a VirtualBox appliance client for a specific team
 # Kenneth Falck <kennu@luottamuksenloyly.fi> 2016-2017
+set -e
 
 if [ "x$1" = "x-c" ]; then
   # Clear all previously generated setup.
   echo 'Clearing all settings...'
-  rm -rf "$HOME/.aws" "$HOME/.ethereum-ll" ll-ethereum.pem ll-credentials.csv
+  rm -rf "$HOME/.aws" "$HOME/.ethereum-ll" ll-ethereum.pem ll-credentials.csv geth.sh connect.sh
   sudo rm -f /etc/ll-env
   exit
 fi
@@ -35,12 +36,11 @@ TEAM_ID=''
 # Ask for team identifier
 echo '----------------------------------------------------------------------'
 while [ "x$AWSKEY" = "x" -o "x$AWSSECRET" = "x" ]; do
-  TEAM_NUM=''
-  while [ "x$TEAM_NUM" = "x" ]; do
-    echo -n 'Please enter your team identifier (NN): '
-    read TEAM_NUM
+  TEAM_ID=''
+  while [ "x$TEAM_ID" = "x" ]; do
+    echo -n 'Please enter your team id (e.g. team01): '
+    read TEAM_ID
   done
-  TEAM_ID="team$TEAM_NUM"
 
   # Autodetect AWS credentials
   AWSKEY=`grep "^$TEAM_ID" ll-credentials.csv | cut -d ',' -f 3`
@@ -56,6 +56,21 @@ echo "aws_access_key_id = $AWSKEY" >> ~/.aws/credentials
 echo "aws_secret_access_key = $AWSSECRET" >> ~/.aws/credentials
 echo '[default]' > ~/.aws/config
 echo 'region = eu-west-1' >> ~/.aws/config
+
+# Install/update additional scripts
+echo "Downloading additional files..."
+for ff in connect.sh geth.sh; do
+  curl -f -s -o "$ff" "https://blockchain-bootcamp.com/files/$ff"
+  chmod 755 "$ff"
+done
+curl -f -s -o "genesis.json" "http://master.blockchain-bootcamp.com/genesis.json"
+
+if [ -d "$HOME/.ethereum-ll" ]; then
+  echo "Ethereum data directory already exists, using existing Genesis block."
+else
+  echo "Initializing Ethereum genesis block..."
+  geth --datadir "$HOME/.ethereum-ll" init "genesis.json"
+fi
 
 if aws iam get-user; then
   # Setup completed.
