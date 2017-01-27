@@ -11,8 +11,8 @@ if [ "$TEAM_ID" = "" ]; then
   exit
 fi
 if [ "$TEAM_ID" = "master" ]; then
-  ADDR='master.ethereum.luottamuksenloyly.fi'
+  ADDR='master.blockchain-bootcamp.com'
 else
-  ADDR=`aws cloudformation describe-stacks --stack-name Ethereum-$TEAM_ID --query "Stacks[0].Outputs[?OutputKey=='Node1PublicDnsName'].OutputValue" --output text`
+  ADDR=`aws --profile luottamus cloudformation describe-stacks --stack-name Ethereum-$TEAM_ID --query "Stacks[0].Outputs[?OutputKey=='Node1PublicDnsName'].OutputValue" --output text`
 fi
 ssh -i ll-ethereum.pem -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ubuntu@$ADDR
