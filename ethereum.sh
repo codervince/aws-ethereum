@@ -20,7 +20,7 @@ if [ "$TEAM_ID" = "master" ]; then
 else
   # Create a random account for this node
   geth --password /home/ubuntu/account.passwd account new
-  BOOTNODES=`curl -s -d 'op=bootnode' http://master.ethereum.luottamuksenloyly.fi/cgi-bin/ethereum.py`
+  BOOTNODES=`curl -s -d 'op=bootnode' http://master.blockchain-bootcamp.com/cgi-bin/ethereum.py`
   UNLOCK="--unlock 0"
 fi
 geth --port 30301 --networkid "$NETWORK_ID" $NATOPTION $BOOTNODES $UNLOCK --password /home/ubuntu/account.passwd --mine --minerthreads=1 >>ethereum.log 2>&1 &
