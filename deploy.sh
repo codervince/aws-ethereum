@@ -11,7 +11,7 @@ MASTER_ACCOUNT_ID="e986f163e65361be0f08aa48dcc3a7b12a57baf0"
 NETWORK_ID="42424242"
 DOMAIN="blockchain-bootcamp.com"
 if [ "$TEAM_ID" = "master" ]; then
-  INSTANCE_TYPE="t2.small"
+  INSTANCE_TYPE="t2.medium"
 else
   INSTANCE_TYPE="t2.micro"
 fi
