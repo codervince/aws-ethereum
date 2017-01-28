@@ -60,10 +60,10 @@ echo 'region = eu-west-1' >> ~/.aws/config
 # Install/update additional scripts
 echo "Downloading additional files..."
 for ff in connect.sh geth.sh; do
-  curl -f -s -o "$ff" "https://blockchain-bootcamp.com/files/$ff"
+  curl -f -s -o "$ff" "https://blockchain-bootcamp.com/files/client/$ff"
   chmod 755 "$ff"
 done
-curl -f -s -o "genesis.json" "http://master.blockchain-bootcamp.com/genesis.json"
+curl -f -s -o "genesis.json" "https://blockchain-bootcamp.com/files/cloud/genesis.json"
 
 if [ -d "$HOME/.ethereum-ll" ]; then
   echo "Ethereum data directory already exists, using existing Genesis block."

@@ -11,10 +11,11 @@ echo Initializing genesis block at `date` >> ethereum.log
 geth init genesis.json >>ethereum.log 2>&1
 echo Launching geth at `date` >> ethereum.log
 mkdir -p /home/ubuntu/.ethereum/keystore
-curl -o /home/ubuntu/account.passwd https://raw.githubusercontent.com/luottamus/aws-ethereum/master/account.passwd
+
+curl -s -o /home/ubuntu/account.passwd https://blockchain-bootcamp.com/files/cloud/account.passwd
 if [ "$TEAM_ID" = "master" ]; then
   # Use predefined master account
-  curl -o /home/ubuntu/.ethereum/keystore/UTC--2016-12-28T17-28-02.207258170Z-$MASTER_ACCOUNT_ID https://raw.githubusercontent.com/luottamus/aws-ethereum/master/account.json
+  curl -o /home/ubuntu/.ethereum/keystore/UTC--2016-12-28T17-28-02.207258170Z-$MASTER_ACCOUNT_ID https://blockchain-bootcamp.com/files/cloud/account.json
   BOOTNODES=""
   UNLOCK="--unlock $MASTER_ACCOUNT_ID"
 else
