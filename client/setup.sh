@@ -6,7 +6,7 @@ set -e
 if [ "x$1" = "x-c" ]; then
   # Clear all previously generated setup.
   echo 'Clearing all settings...'
-  rm -rf "$HOME/.aws" "$HOME/.ethereum-ll" ll-ethereum.pem ll-credentials.csv geth.sh connect.sh
+  rm -rf "$HOME/.aws" "$HOME/.ethereum-ll" "$HOME/.config/Mist" "$HOME/.config/Ethereum Wallet" ll-ethereum.pem ll-credentials.csv geth.sh connect.sh genesis.json
   sudo rm -f /etc/ll-env
   exit
 fi
