@@ -1,10 +1,16 @@
 #!/bin/bash -xe
 # Launch Ethereum with the specified Network ID and a custom genesis block.
-# Kenneth Falck <kennu@luottamuksenloyly.fi> 2016
+# Kenneth Falck <kennu@luottamuksenloyly.fi> 2016-2017
 cd /home/ubuntu
 echo "----------------------------------------------------------------------" >> ethereum.log
 echo Detecting IP address >> ethereum.log
 curl -s -o /var/www/html/ip.json 'https://api.ipify.org?format=json'
+echo Downloading JDK >> ethereum.log
+if [ ! -d /opt/jdk ]; then
+  curl -L -O -H "Cookie: oraclelicense=accept-securebackup-cookie" -k "http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jdk-8u121-linux-x64.tar.gz" >> ethereum.log 2>&1
+  tar xzvf jdk-8u121-linux-x64.tar.gz
+  sudo mv jdk1.8.0_121 /opt/jdk
+fi
 PUBLICIP=`curl -s https://api.ipify.org`
 NATOPTION="--nat=extip:$PUBLICIP"
 echo Initializing genesis block at `date` >> ethereum.log

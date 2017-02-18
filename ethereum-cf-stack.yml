@@ -132,6 +132,7 @@ Resources:
               - "echo TEAM_ID=$TEAM_ID >> /etc/environment"
               - "echo MASTER_ACCOUNT_ID=$MASTER_ACCOUNT_ID >> /etc/environment"
               - "echo DOMAIN=$DOMAIN >> /etc/environment"
+              - "echo 'PATH=$PATH:/opt/jdk/bin' > /etc/profile.d/jdk-path.sh"
               - "echo '#!/bin/sh' > /etc/rc.local"
               - "echo 'sudo -u ubuntu -E /home/ubuntu/ethereum.sh &' >> /etc/rc.local"
               - "echo 'exit 0' >> /etc/rc.local"
