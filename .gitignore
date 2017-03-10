@@ -2,3 +2,4 @@
 node_modules
 npm-debug.log
 ll-ethereum.pem
+ll-ethereum-guest.pem
