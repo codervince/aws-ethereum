@@ -1,5 +1,5 @@
 # Ethereum deployment scripts on AWS CloudFormation
-Kenneth Falck <kennu@luottamuksenloyly.fi> 2016
+Kenneth Falck <kennu@luottamuksenloyly.fi> 2016-2017
 
 ## Overview
 

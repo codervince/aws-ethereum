@@ -15,4 +15,4 @@ if [ "$TEAM_ID" = "master" ]; then
 else
   ADDR=`aws --profile luottamus cloudformation describe-stacks --stack-name Ethereum-$TEAM_ID --query "Stacks[0].Outputs[?OutputKey=='Node1PublicDnsName'].OutputValue" --output text`
 fi
-ssh -i ll-ethereum.pem -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ubuntu@$ADDR
+ssh -i ll-ethereum.pem -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ethereum@$ADDR
