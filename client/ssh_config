@@ -1,0 +1,6 @@
+Host *.blockchain-bootcamp.com
+  User ubuntu
+  IdentityFile ~/ll-ethereum.pem
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  LogLevel ERROR
