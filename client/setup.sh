@@ -45,10 +45,10 @@ echo TEAM_ID="$TEAM_ID" | sudo tee /etc/ll-env >/dev/null
 # Install/update additional scripts
 echo "Downloading additional files..."
 for ff in connect.sh geth.sh; do
-  curl -f -s -o "$ff" "https://blockchain-bootcamp.com/files/client/$ff"
+  curl -f -o "$ff" "https://blockchain-bootcamp.com/files/client/$ff" >/dev/null
   chmod 755 "$ff"
 done
-curl -f -s -o "genesis.json" "https://blockchain-bootcamp.com/files/cloud/genesis.json"
+curl -f -o "genesis.json" "https://blockchain-bootcamp.com/files/cloud/genesis.json" >/dev/null
 
 if [ -d "$HOME/.ethereum-ll" ]; then
   echo "Ethereum data directory already exists, using existing Genesis block."
