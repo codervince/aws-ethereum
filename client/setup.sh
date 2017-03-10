@@ -11,51 +11,36 @@ if [ "x$1" = "x-c" ]; then
   exit
 fi
 
-echo '----------------------------------------------------------------------'
+echo '-------------------------------------------------------------------------'
 echo 'Welcome to Blockchain Bootcamp setup!'
 
 # Ask for setup password
 while [ ! -f ll-ethereum.pem -o ! -f ll-credentials.csv ]; do
-  echo '----------------------------------------------------------------------'
+  echo '-------------------------------------------------------------------------'
   echo -n 'Please enter your setup password: '
   read PASSWORD
   gpg --passphrase "$PASSWORD" --batch --yes -d -o ll-ethereum.pem ll-ethereum.pem.asc
   gpg --passphrase "$PASSWORD" --batch --yes -d -o ll-credentials.csv ll-credentials.csv.asc
   if [ ! -f ll-ethereum.pem -o ! -f ll-credentials.csv ]; then
-    echo '----------------------------------------------------------------------'
+    echo '-------------------------------------------------------------------------'
     echo 'Looks like something went wrong! Please try again.'
   fi
 done
 
 chmod 600 ll-ethereum.pem
 
-AWSKEY=''
-AWSSECRET=''
 TEAM_ID=''
 
 # Ask for team identifier
-echo '----------------------------------------------------------------------'
-while [ "x$AWSKEY" = "x" -o "x$AWSSECRET" = "x" ]; do
-  TEAM_ID=''
-  while [ "x$TEAM_ID" = "x" ]; do
-    echo -n 'Please enter your team id (e.g. team01): '
-    read TEAM_ID
-  done
-
-  # Autodetect AWS credentials
-  AWSKEY=`grep "^$TEAM_ID" ll-credentials.csv | cut -d ',' -f 3`
-  AWSSECRET=`grep "^$TEAM_ID" ll-credentials.csv | cut -d ',' -f 4`
+echo '-------------------------------------------------------------------------'
+while [ "x$TEAM_ID" = "x" ]; do
+  echo -n 'Please enter your team id (e.g. team01): '
+  read TEAM_ID
 done
 
 # Setup team identifier (store in /etc/llenv)
-echo "Setting up client appliance as $TEAM_ID (AWS access key $AWSKEY)."
+echo "Setting up client appliance as $TEAM_ID."
 echo TEAM_ID="$TEAM_ID" | sudo tee /etc/ll-env >/dev/null
-mkdir -p ~/.aws
-echo '[default]' > ~/.aws/credentials
-echo "aws_access_key_id = $AWSKEY" >> ~/.aws/credentials
-echo "aws_secret_access_key = $AWSSECRET" >> ~/.aws/credentials
-echo '[default]' > ~/.aws/config
-echo 'region = eu-west-1' >> ~/.aws/config
 
 # Install/update additional scripts
 echo "Downloading additional files..."
@@ -72,14 +57,7 @@ else
   geth --datadir "$HOME/.ethereum-ll" init "genesis.json"
 fi
 
-if aws iam get-user; then
-  # Setup completed.
-  echo '----------------------------------------------------------------------'
-  echo "Setup completed. You can run ./setup.sh again if needed. Have a nice day!"
-  echo '----------------------------------------------------------------------'
-else
-  echo '----------------------------------------------------------------------'
-  echo "Something went wrong! Please try running ./setup.sh again."
-  echo '----------------------------------------------------------------------'
-  exit 1
-fi
+# Setup completed.
+echo '-------------------------------------------------------------------------'
+echo "Setup completed. You can run ./setup.sh again if needed. Have a nice day!"
+echo '-------------------------------------------------------------------------'
